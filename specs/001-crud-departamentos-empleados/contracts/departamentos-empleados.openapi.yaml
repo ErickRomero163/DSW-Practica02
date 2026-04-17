@@ -1,0 +1,375 @@
+openapi: 3.0.3
+info:
+  title: API CRUD Departamentos y Empleados
+  version: 1.0.0
+  description: Contrato de endpoints para gestión de departamentos y asignación de empleados.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/v1/departamentos:
+    get:
+      summary: Listar departamentos
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Lista de departamentos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DepartamentoResumen'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Crear departamento
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartamentoCreateRequest'
+      responses:
+        '201':
+          description: Departamento creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartamentoResumen'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /api/v1/departamentos/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Obtener departamento con empleados
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Departamento encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartamentoDetalle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Actualizar departamento
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartamentoUpdateRequest'
+      responses:
+        '200':
+          description: Departamento actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartamentoResumen'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    delete:
+      summary: Eliminar departamento sin empleados asociados
+      security:
+        - basicAuth: []
+      responses:
+        '204':
+          description: Departamento eliminado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /api/v1/empleados:
+    get:
+      summary: Listar empleados
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Lista de empleados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Empleado'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Crear empleado con departamento obligatorio
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmpleadoCreateRequest'
+      responses:
+        '201':
+          description: Empleado creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empleado'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /api/v1/empleados/{clave}:
+    parameters:
+      - name: clave
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 100
+    get:
+      summary: Obtener empleado por clave
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Empleado encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empleado'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Actualizar empleado y/o departamento
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmpleadoUpdateRequest'
+      responses:
+        '200':
+          description: Empleado actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empleado'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    delete:
+      summary: Eliminar empleado por clave
+      security:
+        - basicAuth: []
+      responses:
+        '204':
+          description: Empleado eliminado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+    DepartamentoResumen:
+      type: object
+      required: [id, nombre]
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 100
+        descripcion:
+          type: string
+          maxLength: 255
+          nullable: true
+
+    DepartamentoDetalle:
+      allOf:
+        - $ref: '#/components/schemas/DepartamentoResumen'
+        - type: object
+          properties:
+            empleados:
+              type: array
+              items:
+                $ref: '#/components/schemas/EmpleadoResumen'
+
+    EmpleadoResumen:
+      type: object
+      required: [clave, nombre]
+      properties:
+        clave:
+          type: string
+          pattern: '^E-[0-9]+$'
+        nombre:
+          type: string
+          maxLength: 100
+
+    Empleado:
+      type: object
+      required: [clave, nombre, direccion, telefono, departamento]
+      properties:
+        clave:
+          type: string
+          pattern: '^E-[0-9]+$'
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 100
+        direccion:
+          type: string
+          maxLength: 100
+        telefono:
+          type: string
+          maxLength: 100
+        departamento:
+          $ref: '#/components/schemas/DepartamentoResumen'
+
+    DepartamentoCreateRequest:
+      type: object
+      required: [nombre]
+      properties:
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+        descripcion:
+          type: string
+          maxLength: 255
+          nullable: true
+
+    DepartamentoUpdateRequest:
+      type: object
+      required: [nombre]
+      properties:
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+        descripcion:
+          type: string
+          maxLength: 255
+          nullable: true
+
+    EmpleadoCreateRequest:
+      type: object
+      required: [nombre, direccion, telefono, departamentoId]
+      properties:
+        nombre:
+          type: string
+          maxLength: 100
+        direccion:
+          type: string
+          maxLength: 100
+        telefono:
+          type: string
+          maxLength: 100
+        departamentoId:
+          type: integer
+          format: int64
+
+    EmpleadoUpdateRequest:
+      type: object
+      required: [nombre, direccion, telefono, departamentoId]
+      properties:
+        nombre:
+          type: string
+          maxLength: 100
+        direccion:
+          type: string
+          maxLength: 100
+        telefono:
+          type: string
+          maxLength: 100
+        departamentoId:
+          type: integer
+          format: int64
+
+    Problem:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+
+  responses:
+    BadRequest:
+      description: Solicitud inválida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Unauthorized:
+      description: No autenticado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Recurso no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Conflict:
+      description: Conflicto de integridad o regla de negocio
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'

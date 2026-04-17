@@ -1,0 +1,74 @@
+services:
+  database:
+    image: postgres:16.3-alpine
+    container_name: empleados-database
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-dsw_practica02}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    expose:
+      - "5433"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-dsw_practica02}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: empleados-backend
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/${POSTGRES_DB:-dsw_practica02}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      APP_SECURITY_USERNAME: ${APP_SECURITY_USERNAME:-admin}
+      APP_SECURITY_PASSWORD: ${APP_SECURITY_PASSWORD:-admin123}
+    expose:
+      - "8080"
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: empleados-frontend
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:1.27.4-alpine
+    container_name: empleados-nginx
+    restart: unless-stopped
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "${PROXY_HOST_PORT:-80}:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

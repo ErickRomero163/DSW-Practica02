@@ -1,0 +1,27 @@
+# VCS
+.git/
+
+# Build outputs
+target/
+build/
+out/
+
+# IDE / editor
+.idea/
+.vscode/
+
+# Dependencies / caches
+.gradle/
+node_modules/
+.angular/
+
+# Env / logs
+.env*
+*.log*
+
+# Docker files
+Dockerfile*
+.dockerignore
+
+# Coverage
+coverage/
