@@ -1,0 +1,41 @@
+# Java / Spring Boot
+*.class
+*.jar
+*.war
+*.ear
+
+# Build outputs
+build/
+out/
+target/
+dist/
+coverage/
+
+# Node / Angular
+node_modules/
+.angular/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Maven / Gradle
+.gradle/
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE / Editor
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs / temp
+*.log
+*.tmp
+*.swp
+
+# Environment
+.env*
