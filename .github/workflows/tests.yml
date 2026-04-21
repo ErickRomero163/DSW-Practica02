@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - develop
+      - developer
   pull_request:
 
 jobs:
@@ -51,42 +51,30 @@ jobs:
         run: npm test -- --watch=false --browsers=ChromeHeadless
 
   cypress-e2e:
-  name: Cypress E2E
-  runs-on: ubuntu-latest
-  defaults:
-    run:
-      working-directory: frontend/departamentos-admin
-
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Check if Cypress config exists
-      id: check_cypress
-      run: |
-        if [ -f cypress.config.js ] || [ -f cypress.config.ts ]; then
-          echo "exists=true" >> $GITHUB_OUTPUT
-        else
-          echo "exists=false" >> $GITHUB_OUTPUT
-        fi
-
-    - name: Set up Node.js
-      if: steps.check_cypress.outputs.exists == 'true'
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: npm
-        cache-dependency-path: frontend/departamentos-admin/package-lock.json
-
-    - name: Install dependencies
-      if: steps.check_cypress.outputs.exists == 'true'
-      run: npm ci
-
-    - name: Run Cypress tests
-      if: steps.check_cypress.outputs.exists == 'true'
-      uses: cypress-io/github-action@v6
-      with:
+    name: Cypress E2E
+    runs-on: ubuntu-latest
+    defaults:
+      run:
         working-directory: frontend/departamentos-admin
-        start: npm start
-        wait-on: http://localhost:4200
-        wait-on-timeout: 120
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/departamentos-admin/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: frontend/departamentos-admin
+          start: npm start
+          wait-on: http://localhost:4200
+          wait-on-timeout: 120
