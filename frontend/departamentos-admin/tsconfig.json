@@ -17,8 +17,12 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "types": []
   },
+  "exclude": [
+  "cypress"
+],
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
