@@ -24,13 +24,13 @@ import { EmpleadoResponse, EmpleadosApiService } from '../../services/empleados-
         (cancel)="cancelEdit()"
       />
 
-      <ul *ngIf="!loading">
+      <ul *ngIf="!loading" data-cy="empleados-list">
         <li *ngFor="let empleado of empleados">
           <strong>{{ empleado.nombre }}</strong>
           <span> - {{ empleado.clave }}</span>
           <span> - {{ empleado.departamento.nombre }}</span>
-          <button type="button" (click)="startEdit(empleado)">Editar</button>
-          <button type="button" (click)="remove(empleado)">Eliminar</button>
+          <button type="button" (click)="startEdit(empleado)" data-cy="empleado-edit">Editar</button>
+          <button type="button" (click)="remove(empleado)" data-cy="empleado-delete">Eliminar</button>
         </li>
       </ul>
 

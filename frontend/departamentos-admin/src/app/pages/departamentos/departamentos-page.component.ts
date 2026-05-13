@@ -18,26 +18,26 @@ import {
 
       <p *ngIf="errorMessage">{{ errorMessage }}</p>
 
-      <form [formGroup]="form" (ngSubmit)="save()">
+      <form [formGroup]="form" (ngSubmit)="save()" data-cy="departamento-form">
         <label for="nombre">Nombre</label>
-        <input id="nombre" type="text" formControlName="nombre" />
+        <input id="nombre" type="text" formControlName="nombre" data-cy="departamento-nombre" />
 
         <label for="descripcion">Descripción</label>
-        <input id="descripcion" type="text" formControlName="descripcion" />
+        <input id="descripcion" type="text" formControlName="descripcion" data-cy="departamento-descripcion" />
 
-        <button type="submit" [disabled]="form.invalid || loading">
+        <button type="submit" [disabled]="form.invalid || loading" data-cy="departamento-submit">
           {{ editingDepartamentoId ? 'Actualizar' : 'Crear' }}
         </button>
-        <button type="button" (click)="resetForm()" [disabled]="loading">Limpiar</button>
+        <button type="button" (click)="resetForm()" [disabled]="loading" data-cy="departamento-reset">Limpiar</button>
       </form>
 
-      <ul *ngIf="!loading">
+      <ul *ngIf="!loading" data-cy="departamentos-list">
         <li *ngFor="let dept of departamentos">
           <strong>{{ dept.nombre }}</strong>
           <span> - {{ dept.descripcion || 'Sin descripción' }}</span>
-          <button type="button" (click)="startEdit(dept)">Editar</button>
-          <button type="button" (click)="remove(dept)">Eliminar</button>
-          <button type="button" (click)="goToDetalle(dept.id)">Ver detalle</button>
+          <button type="button" (click)="startEdit(dept)" data-cy="departamento-edit">Editar</button>
+          <button type="button" (click)="remove(dept)" data-cy="departamento-delete">Eliminar</button>
+          <button type="button" (click)="goToDetalle(dept.id)" data-cy="departamento-detalle">Ver detalle</button>
         </li>
       </ul>
 

@@ -11,14 +11,14 @@ import { AuthSessionService } from '../../services/auth-session.service';
   template: `
     <section>
       <h1>Iniciar sesión</h1>
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" data-cy="login-form">
         <label for="username">Usuario</label>
-        <input id="username" type="text" formControlName="username" />
+        <input id="username" type="text" formControlName="username" data-cy="login-email" />
 
         <label for="password">Contraseña</label>
-        <input id="password" type="password" formControlName="password" />
+        <input id="password" type="password" formControlName="password" data-cy="login-password" />
 
-        <button type="submit" [disabled]="form.invalid">Entrar</button>
+        <button type="submit" [disabled]="form.invalid" data-cy="login-submit">Entrar</button>
       </form>
     </section>
   `

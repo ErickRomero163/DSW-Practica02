@@ -9,13 +9,13 @@ import { AuthSessionService } from './services/auth-session.service';
   imports: [CommonModule, RouterOutlet, RouterLink],
   template: `
     <header style="padding: 1rem; border-bottom: 1px solid #ddd; display: flex; gap: 1rem; align-items: center;">
-      <a routerLink="/departamentos">Departamentos</a>
-      <a routerLink="/empleados">Empleados</a>
-      <a routerLink="/login">Login</a>
+      <a routerLink="/departamentos" data-cy="nav-departamentos">Departamentos</a>
+      <a routerLink="/empleados" data-cy="nav-empleados">Empleados</a>
+      <a routerLink="/login" data-cy="nav-login">Login</a>
       <span *ngIf="authSessionService.isAuthenticated()">
         Usuario: {{ authSessionService.getUsername() }}
       </span>
-      <button *ngIf="authSessionService.isAuthenticated()" type="button" (click)="logout()">
+      <button *ngIf="authSessionService.isAuthenticated()" type="button" (click)="logout()" data-cy="logout-button">
         Cerrar sesión
       </button>
     </header>

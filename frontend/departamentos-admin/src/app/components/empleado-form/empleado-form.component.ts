@@ -13,24 +13,24 @@ export interface EmpleadoFormValue extends EmpleadoRequest {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <form [formGroup]="form" (ngSubmit)="submit()">
+    <form [formGroup]="form" (ngSubmit)="submit()" data-cy="empleado-form">
       <label for="nombre">Nombre</label>
-      <input id="nombre" formControlName="nombre" type="text" />
+      <input id="nombre" formControlName="nombre" type="text" data-cy="empleado-nombre" />
 
       <label for="direccion">Dirección</label>
-      <input id="direccion" formControlName="direccion" type="text" />
+      <input id="direccion" formControlName="direccion" type="text" data-cy="empleado-direccion" />
 
       <label for="telefono">Teléfono</label>
-      <input id="telefono" formControlName="telefono" type="text" />
+      <input id="telefono" formControlName="telefono" type="text" data-cy="empleado-telefono" />
 
       <label for="departamentoId">Departamento</label>
-      <select id="departamentoId" formControlName="departamentoId">
+      <select id="departamentoId" formControlName="departamentoId" data-cy="empleado-departamento">
         <option [ngValue]="null" disabled>Seleccione un departamento</option>
         <option *ngFor="let dept of departamentos" [ngValue]="dept.id">{{ dept.nombre }}</option>
       </select>
 
-      <button type="submit" [disabled]="form.invalid">Guardar empleado</button>
-      <button type="button" (click)="cancel.emit()">Cancelar</button>
+      <button type="submit" [disabled]="form.invalid" data-cy="empleado-submit">Guardar empleado</button>
+      <button type="button" (click)="cancel.emit()" data-cy="empleado-cancel">Cancelar</button>
     </form>
   `
 })

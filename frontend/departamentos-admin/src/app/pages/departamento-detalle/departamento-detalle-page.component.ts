@@ -12,19 +12,19 @@ import {
   imports: [CommonModule],
   template: `
     <section>
-      <button type="button" (click)="goBack()">Volver</button>
+      <button type="button" (click)="goBack()" data-cy="detalle-volver">Volver</button>
 
       <p *ngIf="loading">Cargando detalle...</p>
       <p *ngIf="errorMessage">{{ errorMessage }}</p>
 
       <ng-container *ngIf="!loading && detalle">
-        <h1>{{ detalle.nombre }}</h1>
+        <h1 data-cy="detalle-nombre">{{ detalle.nombre }}</h1>
         <p>{{ detalle.descripcion || 'Sin descripción' }}</p>
 
         <h2>Empleados</h2>
         <p *ngIf="detalle.empleados.length === 0">Este departamento aún no tiene empleados asignados.</p>
 
-        <ul *ngIf="detalle.empleados.length > 0">
+        <ul *ngIf="detalle.empleados.length > 0" data-cy="detalle-empleados-list">
           <li *ngFor="let empleado of detalle.empleados">
             {{ empleado.nombre }} - {{ empleado.clave }}
           </li>
